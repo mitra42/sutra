@@ -53,4 +53,4 @@ If Sutra's server is on another port, set `SUTRA_URL`, for example `SUTRA_URL=ht
 
 ## What was checked
 
-Claude drove every tool with a test client on Linux on 15 Nov 2026. It has not been used from Claude Code or the Claude desktop app on the Mac.
+Claude drove every tool with a test client on Linux on 15 Nov 2026. Since 16 Nov it has been in daily use from the Claude desktop app on Mitra's Mac: that is how Claude reads and answers the bug reports kept in Sutra.

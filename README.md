@@ -22,6 +22,58 @@ A personal productivity tool: tasks and projects (in the style of Asana), people
 
 Mitra uses the laptop app every day, alongside Asana. Everything that runs on the laptop is built. The hub on a public server, and so the phone in real use, wait on a server upgrade. Person and Company cards and their links to Contacts and mail are designed but not built. The list of what Mitra is testing and what Claude is fixing lives in Sutra itself.
 
+## Installing it
+
+Sutra is a small Node.js server plus a web app that you install from Chrome. Everything runs on your own computer; nothing is sent anywhere else. Written and used on a Mac; the server should run anywhere Node does, but only the Mac has been tried. The step that starts it at login is Mac-only.
+
+**You need:** [Node.js](https://nodejs.org) 22.13 or later (`node --version` to check), git, and Chrome.
+
+**1. Get it and start the server**
+
+```
+git clone <this repository's address> sutra
+cd sutra/app
+npm install
+npm start
+```
+
+Leave that terminal open. On Node 22 it prints a one-line warning that SQLite is experimental; that's expected. Your data goes in `app/data/` (never into git).
+
+**2. Open it**
+
+Open <http://localhost:8470/> in Chrome. To use it as an app, with its own window and Dock icon, use the install icon at the right of Chrome's address bar. The server only answers your own computer, so there is no login on the laptop.
+
+**3. Start it at login (Mac, optional)**
+
+Stop the server from step 1 (Ctrl-C), then, still in `app`:
+
+```
+zsh scripts/start-at-login.sh
+```
+
+From now on the Mac starts Sutra when you log in, and restarts it if it ever stops. `zsh scripts/start-at-login.sh status` shows whether it's running; `... remove` undoes it. This also starts a hub on the laptop (below), which is harmless if you don't use it.
+
+**4. Let Claude use it (optional)**
+
+```
+cd mcp
+npm install
+```
+
+Then add it to Claude Code with `claude mcp add sutra -- node "/full/path/to/sutra/app/mcp/sutra-mcp.js"`, or to the Claude desktop app under Settings → Developer → Edit Config. Details in `app/mcp/README.md`.
+
+**5. Bring in a project from Asana (optional)**
+
+In Asana, open the project's menu → Export → JSON. Then, in `app`, with the server running:
+
+```
+npm run import-asana -- ~/Downloads/the-export.json "Project title"
+```
+
+**Keeping it up to date:** `git pull`, then `npm install` in `app` (and in `app/mcp` if you use it). Then restart the server: run `zsh scripts/start-at-login.sh` again, or Ctrl-C and `npm start`, and reload the page.
+
+**The hub, and the phone.** To use Sutra on a phone, a second copy of the server runs as a "hub" on a machine the phone can reach over the internet. The laptop and the phone each sync with it. This part is built but not yet in real use. It has only been run on the laptop itself, as described under "Trying the hub on the laptop" in `app/README.md`. On a real server it would sit behind a web server that provides https (Apache, nginx or similar), started with `npm run hub`. Set its password with `npm run set-password`, and give the laptop the key the hub prints. Expect rough edges until this is written up from real use.
+
 ## What it does
 
 **Cards and Lists**

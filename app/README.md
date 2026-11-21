@@ -28,7 +28,7 @@ Make the Chrome window narrower than about 700 pixels, or use Chrome's device to
 
 - **Markdown export:** `npm run export -- ~/some/folder` writes one Markdown file per card, linked to each other, into a folder that opens as an Obsidian vault. It only reads, and can be run while the server is running.
 - **Backups:** the server writes a dated copy of its database once a day into `data/backups/` (the hub into `data-hub/backups/`) and keeps the last 21.
-- **Asana import:** in Asana, open the project's menu, Export, JSON. Then `npm run import-asana -- ~/Downloads/thefile.json "Project title"` with the server running. Sections become headings and sub-tasks become the task's own List. Importing a newer export of the same project updates the same cards. **This has not been tried on a real export**: it is written from Asana's published description of a task. Try a small project first.
+- **Asana import:** in Asana, open the project's menu, Export, JSON. Then `npm run import-asana -- ~/Downloads/thefile.json "Project title"` with the server running. Sections become headings and sub-tasks become the task's own List. A task that is already in Sutra (from an earlier import, or another project) is never changed: Sutra always wins. It is only added to this project's List if it isn't there yet. To import into an existing card of another name, add `--into "Card title"`.
 - **AI (MCP):** see `mcp/README.md`.
 
 ## Trying the hub on the laptop
