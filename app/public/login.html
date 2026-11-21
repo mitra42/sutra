@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#33475b">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./sutra.css">
+  <title>Sutra: sign in</title>
+  <script type="module" src="./login.js"></script>
+</head>
+<body class="signin">
+  <main>
+    <h1>Sutra</h1>
+    <section id="out" hidden>
+      <p><button id="passkey" class="big">Sign in with a passkey</button></p>
+      <form id="pw">
+        <p>or with the password:</p>
+        <p><input type="password" id="password" autocomplete="current-password" placeholder="Password"> <button>Sign in</button></p>
+      </form>
+    </section>
+    <section id="in" hidden>
+      <p>This browser is signed in. <a id="go" href="/">Open Sutra</a></p>
+      <h2>Passkeys</h2>
+      <ul id="keys"></ul>
+      <p><input type="text" id="keyname" placeholder="Name, e.g. iPhone" autocomplete="off"> <button id="newkey">Make a passkey on this device</button></p>
+      <p><button id="signout">Sign out this browser</button></p>
+    </section>
+    <p id="message" class="quiet"></p>
+  </main>
+</body>
+</html>

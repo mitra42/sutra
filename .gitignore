@@ -1,0 +1,4 @@
+# Copies of real data, and per-machine settings: never published.
+.sim/
+.DS_Store
+.obsidian/

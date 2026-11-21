@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./style.css">
+  <title>Sutra tests: database</title>
+  <script type="module" src="./db.js"></script>
+</head>
+<body>
+<h1>Database in the browser</h1>
+<div id="nav"></div>
+<p class="note">This is <b id="tab"></b>. Open the page in a second tab to see whether both can use the database.</p>
+<p>
+  Storage method:
+  <select id="method">
+    <option value="auto">automatic (several-tabs method first)</option>
+    <option value="opfs">opfs (several tabs)</option>
+    <option value="opfs-wl">opfs-wl (several tabs, newer)</option>
+    <option value="sahpool">sahpool (one tab)</option>
+  </select>
+</p>
+<p class="note" id="tried"></p>
+<div id="out">Opening the database…</div>
+<p>
+  <button id="add">Add a row</button>
+  <button id="persist">Ask for protected storage</button> <span id="persisted" class="note"></span>
+</p>
+<h2>Search the rows with a regular expression</h2>
+<p><input id="pattern" value="^row.*tab"> <button id="search">Search</button></p>
+<div id="found"></div>
+<h2>Where this page is running</h2>
+<div id="env"></div>
+</body>
+</html>

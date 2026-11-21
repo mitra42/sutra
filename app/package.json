@@ -1,0 +1,30 @@
+{
+  "name": "sutra",
+  "version": "0.4.0",
+  "private": true,
+  "description": "Sutra: a personal productivity tool. See ../spec.md and ../plan.md.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "hub": "SUTRA_ROLE=hub node server.js",
+    "export": "node scripts/export-markdown.js",
+    "import-asana": "node scripts/import-asana.js",
+    "test": "node --test test/*.test.js",
+    "test:browser": "node --test --test-concurrency=1 test-browser/*.test.js",
+    "set-password": "node scripts/set-password.js"
+  },
+  "dependencies": {
+    "@simplewebauthn/browser": "^14.0.0",
+    "@simplewebauthn/server": "^14.1.0",
+    "@sqlite.org/sqlite-wasm": "^3.54.1-build1",
+    "express": "^5.2.1",
+    "html-element-extended": "^0.1.7"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.65.1"
+  },
+  "license": "MIT"
+}

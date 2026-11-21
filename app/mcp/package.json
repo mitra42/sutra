@@ -1,0 +1,12 @@
+{
+  "name": "sutra-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lets an AI tool such as Claude read and act on Sutra's data, through the laptop's local server.",
+  "type": "module",
+  "bin": { "sutra-mcp": "sutra-mcp.js" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.20.0",
+    "zod": "^4.6.7"
+  }
+}

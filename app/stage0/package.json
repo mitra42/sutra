@@ -1,0 +1,15 @@
+{
+  "name": "sutra-stage0",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Sutra stage 0: throwaway hands-on tests. Not the app.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "site": "node make-site.js"
+  },
+  "dependencies": {
+    "@sqlite.org/sqlite-wasm": "^3.54.1-build1",
+    "express": "^5.2.1"
+  }
+}

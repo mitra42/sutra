@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./style.css">
+  <title>Sutra tests: passkey</title>
+  <script type="module" src="./passkey.js"></script>
+</head>
+<body>
+<h1>Passkey</h1>
+<div id="nav"></div>
+<p class="note">This only checks that the phone or browser will create a passkey and sign in with it from
+  this kind of page. Nothing is sent to a server, and the passkey is of no use for anything else; delete it
+  afterwards from your passwords.</p>
+<p>
+  <button id="create">1. Create a test passkey</button>
+  <button id="signin">2. Sign in with it</button>
+</p>
+<pre id="log"></pre>
+<h2>Where this page is running</h2>
+<div id="env"></div>
+</body>
+</html>

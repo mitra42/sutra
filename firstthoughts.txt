@@ -1,0 +1,70 @@
+Productive app prompt
+
+
+I want to create a productivity app for me. This is specific to me. I don't plan on providing it to anyone else 
+
+It would have some aspects of Asana, some of a CRM and some of Notes 
+
+I am imagining it having three aspects
+A: On the phone - as a PWM - with offline data synchronised on reconnection
+B: On the laptop - could be a web app (like Asana is now) or a web page accessing a local server
+C: A server component - I have a linux VM that I’ll run it on.
+
+
+Tools etc
+* Code should be Javascript for all three
+* Database probably Sqlite 
+* Backend probably running under express 
+Random unsorted thoughts - Claude please organize these
+
+* Conceptually like Asana in many but no all ways
+* Concepts of Cards and Lists 
+* Cards come in a few type - Task, Person, Company 
+* A List can contain any cards, and has headings (like Asana)
+* All cards (Task, Person, Company) have a List
+* A “Task” consists of:
+    * Title
+    * Note(s)
+    * Tags
+    * List of other items
+* Wherever possible use the same shortcut keys as Asana
+* I work in three modes:
+    * I'm fully online.
+    * I'm on a working but poor connection, for example, tethered to a phone.
+    * I have no connectivity whatsoever, for example, on a plane.
+* Projects can be marked offline in which case any Task in that project needs to be synced, those not “offline” can only be accessed live. 
+* In poor connectivity situations, changes should be synced for update and sent as soon as possible, 
+* Should be able to link files or folders on my laptop to cards
+* Should ideally work with IoS Notes in some way,
+* Presume Markdown as core way to handle text in anything. Happy to edit using Markdown
+
+
+Person cards
+* should be a concept of a “person” card.
+* Can link to my IoS contact including when offline
+* Should be able to find any email from any of the email addresses listed on the IoS Contact 
+* Should link to their LinkedIn if known (e.g. from the IoS Contacts or separately found in my LinkedIn Contacts)
+* Should show how I connect with that person, ideally finding them in my WhatsApp, LinkedIn, Facebook Messenger, Email
+* Created as used, i.e. does not have to be one person card for each of the thousands of people in my LinkedIn or Contacts 
+
+Company cards
+* Similar to a person card
+* Should find any person with a domain from that company
+* Should be able to find any email with that company 
+
+The the equivalent of an Asana project is just a Task itself 
+Top level List that shows on home page - I always start here
+Pinned Lists on that home page show first, then 1-button sortable by most recent or alphabetic 
+Tags should work across everything, i.e. if I click on a tag it shows me a temporary list of everything (Task, Person, Company) tagged. 
+
+Features I like in Asana other than mentioned
+* Easy to brainstorm new lists , i.e. return ends one new Task and starts the next
+* Can assign a date to a task but don’t have to
+* Compact UI - doesnt waste screen space
+* Quick access bar down left side 
+* Three pane view - Quick access; List working on; Task from that list (with its own list underneath it) 
+
+* Search goes across all cards
+
+Features I don’t like in Asana
+* Deletions are hard to find

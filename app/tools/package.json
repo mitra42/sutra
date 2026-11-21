@@ -1,0 +1,14 @@
+{
+  "name": "sutra-tools",
+  "private": true,
+  "description": "One-off preparation of libraries that are published in pieces. Not needed to run or develop Sutra.",
+  "type": "module",
+  "scripts": {
+    "codemirror": "esbuild codemirror-entry.js --bundle --format=esm --minify --outfile=../vendor/codemirror.js"
+  },
+  "dependencies": {
+    "@codemirror/lang-markdown": "^6.3.0",
+    "codemirror": "^6.0.1",
+    "esbuild": "^0.25.0"
+  }
+}
