@@ -32,7 +32,11 @@ export function exportedProject(tasks) {
   return best ? best.project : null;
 }
 
-export async function importAsana(exported, title, call, { into, yes = false } = {}) {
+// `rerun` says how to run the import again with an option added, for the error messages: it differs
+// between this script and import-asana-all.js. It is given 'yes', or ['into', title].
+const plainRerun = (option) => (option === 'yes' ? 'run again with --yes' : `run again with --into "${option[1]}"`);
+
+export async function importAsana(exported, title, call, { into, yes = false, rerun = plainRerun } = {}) {
   const tasks = Array.isArray(exported) ? exported : (exported.data || []);
   const act = (op, ...args) => call('act', { op, args, as: 'asana-import' });
   const read = (op, ...args) => call('read', { op, args });
@@ -57,15 +61,15 @@ export async function importAsana(exported, title, call, { into, yes = false } =
     const existing = await read('card', projectId);
     if (existing && !existing.trashed && existing.title !== wanted && !yes) {
       throw new Error(`The card for this Asana project ("${project.name}") already exists, titled "${existing.title}". `
-        + `Importing would put this export's tasks into it. If that is right, run again with --yes; to import into a `
-        + `different card, use --into "<its title>".`);
+        + `Importing would put this export's tasks into it. If that is right, ${rerun('yes')}; to import into a `
+        + `different card, ${rerun(['into', '<its title>'])}.`);
     }
     // A card with this title made some other way (an earlier import that filed it under the wrong
     // project, say): importing would make a second one beside it.
     const namesake = (await read('query', `title = '${wanted.replace(/'/g, "''")}' AND type <> 'dynamic'`)).filter((id) => id !== projectId);
     if (!existing && namesake.length && !yes) {
-      throw new Error(`There is already a card titled "${wanted}". To import into it, run again with --into "${wanted}"; `
-        + 'to make a separate new card anyway, add --yes.');
+      throw new Error(`There is already a card titled "${wanted}". To import into it, ${rerun(['into', wanted])}; `
+        + `to make a separate new card anyway, ${rerun('yes')}.`);
     }
   }
   // Sutra wins: a task already in Sutra keeps everything about it (title, Note, dates, done, tags,

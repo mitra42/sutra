@@ -11,7 +11,8 @@
     "import-asana": "node scripts/import-asana.js",
     "test": "node --test test/*.test.js",
     "test:browser": "node --test --test-concurrency=1 test-browser/*.test.js",
-    "set-password": "node scripts/set-password.js"
+    "set-password": "node scripts/set-password.js",
+    "import-asana-all": "node scripts/import-asana-all.js"
   },
   "dependencies": {
     "@simplewebauthn/browser": "^14.0.0",

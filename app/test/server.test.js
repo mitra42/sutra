@@ -267,3 +267,66 @@ test('the laptop server has no login: its own front end works as before', async 
     assert.equal((await fetch(`http://localhost:${laptop.port}/auth/status`)).status, 404);
   } finally { laptop.stop(); }
 });
+
+test('Asana import of many projects through the API: paging, sub-tasks, skipping X projects, waiting when told to', async () => {
+  const s = await start();
+  try {
+    const { makeAsana, choose } = await import('../scripts/import-asana-all.js');
+    const { importAsana } = await import('../scripts/import-asana.js');
+    const call = async (kind, body) => (await s.call(kind, body)).body.result;
+    const p1 = { gid: '500', name: 'Garden' };
+    const mem = (section) => [{ project: p1, section: { gid: section, name: section === 's1' ? 'Spring' : 'Summer' } }];
+    // A pretend Asana: answers the requests the script makes, in pages of two, once with "too many requests".
+    const pages = {
+      '/workspaces': [{ gid: 'w1', name: 'Mine' }],
+      '/projects': [{ gid: '500', name: 'Garden' }, { gid: '501', name: 'Xmas (done already)' }, { gid: '502', name: 'xylophone' }, { gid: '503', name: 'Empty one' }],
+      '/tasks?project=500': [
+        { gid: 't1', name: 'Dig', completed: false, memberships: mem('s1'), num_subtasks: 1 },
+        { gid: 't2', name: 'Sow', completed: false, memberships: mem('s1'), num_subtasks: 0 },
+        { gid: 't3', name: 'Water', completed: false, memberships: mem('s2'), num_subtasks: 0 },
+      ],
+      '/tasks?project=503': [],
+      '/tasks/t1/subtasks': [{ gid: 't1a', name: 'Find spade', completed: false, num_subtasks: 1 }],
+      '/tasks/t1a/subtasks': [{ gid: 't1b', name: 'Look in shed', completed: false, num_subtasks: 0 }],
+    };
+    let limited = false;
+    const waited = [];
+    const fetchFn = async (url) => {
+      const key = url.searchParams.get('project') ? `${url.pathname.replace('/api/1.0', '')}?project=${url.searchParams.get('project')}` : url.pathname.replace('/api/1.0', '');
+      if (!limited && key === '/projects') {
+        limited = true;
+        return new Response('{}', { status: 429, headers: { 'Retry-After': '7' } });
+      }
+      const items = pages[key];
+      if (!items) return new Response(JSON.stringify({ errors: [{ message: `no ${key}` }] }), { status: 404 });
+      const offset = Number(url.searchParams.get('offset') || 0);
+      const next = offset + 2 < items.length ? { offset: String(offset + 2) } : null;
+      return new Response(JSON.stringify({ data: items.slice(offset, offset + 2), next_page: next }), { status: 200 });
+    };
+    const asana = makeAsana('token', { fetchFn, sleep: async (ms) => { if (ms >= 1000) waited.push(ms); } });
+    const [w] = await asana.workspaces();
+    const projects = await asana.projects(w.gid, false);
+    assert.deepEqual(waited, [7000], 'waited as long as Asana said');
+    assert.deepEqual(choose(projects).map((p) => p.name), ['Garden', 'Empty one'], 'X and x projects left out');
+    assert.deepEqual(choose(projects, { only: 'xylophone' }).map((p) => p.name), ['xylophone']);
+    const tasks = await asana.tasks('500');
+    assert.equal(tasks.length, 3, 'all pages read');
+    const r = await importAsana(tasks, 'Garden', call);
+    assert.equal(r.project, 'asana:project:500');
+    const list = s.sutra.list(r.project);
+    assert.deepEqual(list.sublists.map((x) => [x.heading, x.cards.map((c) => c.title)]), [[null, []], ['Spring', ['Dig', 'Sow']], ['Summer', ['Water']]]);
+    assert.deepEqual(s.sutra.list('asana:t1').sublists[0].cards.map((c) => c.title), ['Find spade']);
+    assert.deepEqual(s.sutra.list('asana:t1a').sublists[0].cards.map((c) => c.title), ['Look in shed']);
+    // A project whose name is already a card's: the advice is a command that works for this script.
+    const { rerunFor } = await import('../scripts/import-asana-all.js');
+    s.sutra.createCard({ title: 'Anon' }, { list: 'home' });
+    const anon = [{ gid: 'a1', name: 'Hidden', completed: false, memberships: [{ project: { gid: '504', name: 'Anon' } }] }];
+    await assert.rejects(importAsana(anon, 'Anon', call, { rerun: rerunFor('Anon') }), /npm run import-asana-all "Anon" --go --into="Anon"; to make a separate new card anyway, run: npm run import-asana-all "Anon" --go --yes/);
+    const into = await importAsana(anon, 'Anon', call, { into: 'Anon', rerun: rerunFor('Anon') });
+    assert.equal(s.sutra.card(into.project).title, 'Anon');
+    assert.deepEqual(s.sutra.list(into.project).sublists[0].cards.map((c) => c.title), ['Hidden']);
+    // An empty project still gets its card.
+    const empty = await importAsana([{ memberships: [{ project: { gid: '503', name: 'Empty one' } }] }], 'Empty one', call);
+    assert.equal(s.sutra.card(empty.project).title, 'Empty one');
+  } finally { s.stop(); }
+});
